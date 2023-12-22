@@ -2,7 +2,7 @@
 # This playbook installs ngnix on both "CentOS" and "Ubuntu" 
 - name: set up webserver
 
-  hosts: all
+  hosts: linux
   # Vars: variables that will apply to the play, on all target systems
 
   # Tasks: the list of tasks that will be executed within the play, this section
