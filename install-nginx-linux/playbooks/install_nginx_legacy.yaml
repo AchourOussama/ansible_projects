@@ -1,0 +1,41 @@
+---
+# This playbook installs ngnix on both "CentOS" and "Ubuntu" separately
+- name: set up webserver
+
+  # Hosts: where our play will run and options it will run with
+  hosts: all
+  # Vars: variables that will apply to the play, on all target systems
+
+  # Tasks: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  tasks: 
+      
+    - name: Distribution
+      debug: msg="{{ ansible_distribution }}"
+    
+
+    - name: installing nginx for Centos
+      yum:
+        name: nginx
+        state: latest
+      when: ansible_distribution == "CentOS"
+
+    - name: update apt for Ubuntu
+      apt: 
+        update_cache: yes 
+      when: ansible_distribution == "Ubuntu"
+
+    - name: installing nginx for Ubuntu
+      apt:
+        name: nginx
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+      
+    - name: start nginx
+      service: 
+        name: nginx
+        state: started
+        #enabled: yes  # if you want to also enable nginx
+
+...
+

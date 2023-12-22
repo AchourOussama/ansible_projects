@@ -1,0 +1,111 @@
+---
+# This playbook installs ngnix on both "CentOS" and "Ubuntu" 
+- name: set up webserver
+
+  hosts: all
+  # Vars: variables that will apply to the play, on all target systems
+
+  # Tasks: the list of tasks that will be executed within the play, this section
+  # can also be used for pre and post tasks
+  vars_files:
+    - vars.yml
+  tasks:
+    # - name: Remove installed nginx 
+    #   package:
+    #     name:
+    #       - nginx
+    #     state: absent
+     
+    # - name: Gathering service facts
+    #   service_facts:
+
+    # - name: Get facts
+    #   debug:
+    #     msg: "{{ ansible_facts.services['nginx'].status }}"
+    
+    # Install EPEL repository
+    # - name: Install EPEL
+    #   yum:
+    #     name: epel-release
+    #     update_cache: yes
+    #     state: latest
+    #   when: ansible_distribution == 'CentOS'
+    
+    # Installing nginx service 
+    - name: Install the latest version of nginx 
+      package:
+        name: nginx
+        state: latest
+      tags: install nginx
+
+    # # Checking nginx existence
+    # - name: Check if Service Exists
+    #   stat: path=/etc/init.d/{{service_name}}
+    #   register: service_status
+    #   tags: check nginx
+
+
+    # - name: Display service availability
+    #   debug:
+    #     msg: "Nginx service is {{ 'installed' if service_status.stat.exists  else 'not installed' }}"
+    #   #when: service_status.stat.exists
+    #   tags: check nginx
+
+    # Nginx service management 
+    - name: start nginx
+      service: 
+        name: nginx
+        state: started
+        #enabled: yes  # if you want to also enable nginx
+    
+    # overwriting index.html
+    - name: Jinja2 template
+      template:
+        src: index.html-base.j2
+        dest: "{{nginx_root_location}}/index.html"
+        trim_blocks: true
+        mode: 0644
+
+    # # Checking nginx status 
+
+    # - name: Check Nginx Service Status
+    #   systemd:
+    #     name: nginx
+    #     state: started
+    #   register: nginx_status
+    #   tags: check nginx
+    
+    # - name: Display Nginx Service Status
+    #   debug:
+    #     msg: "Nginx service is {{ nginx_status.state | to_json }}"
+    #   tags: check nginx_status
+
+    # # Restarting nginx
+    # - name: restart nginx
+    #   service:
+    #     name: nginx
+    #     state: restarted
+    #   tags: restart ngnix
+    #   notify: Check HTTP service
+    
+    # # Removing nginx service 
+    # - name: Removing the latest version of nginx 
+    #   package:
+    #     name: nginx
+    #     state: absent
+    #   tags: remove nginx
+
+    # Template index.html-base.j2 to index html on taget 
+
+
+
+  handlers:
+    # Checking the webserver after restart: 
+    - name : Check HTTP service 
+      uri:
+        url: "http://{{ansible_default_ipv4.address}}"
+        # status_code:
+        #   - 200
+
+...
+
