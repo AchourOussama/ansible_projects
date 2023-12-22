@@ -8,7 +8,7 @@
   # Tasks: the list of tasks that will be executed within the play, this section
   # can also be used for pre and post tasks
   vars_files:
-    - vars.yml
+    - ../vars.yml
   tasks:
     # - name: Remove installed nginx 
     #   package:
@@ -57,15 +57,22 @@
         name: nginx
         state: started
         #enabled: yes  # if you want to also enable nginx
-    
-    # overwriting index.html
-    - name: Jinja2 template
+      tags: start nginx
+    # # overwriting index.html
+    # - name: Jinja2 template
+    #   template:
+    #     src: index.html-base.j2
+    #     dest: "{{nginx_root_location}}/index.html"
+    #     trim_blocks: true
+    #     mode: 0644
+
+    - name: Template index.html-ansible_managed.j2 to index.html on target
       template:
-        src: index.html-base.j2
+        src: ../templates/index.html-ansible_managed.j2
         dest: "{{nginx_root_location}}/index.html"
         trim_blocks: true
         mode: 0644
-
+      tags: render template
     # # Checking nginx status 
 
     # - name: Check Nginx Service Status
