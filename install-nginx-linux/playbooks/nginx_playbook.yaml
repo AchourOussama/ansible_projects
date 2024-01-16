@@ -1,5 +1,7 @@
 ---
-# This playbook installs ngnix on both "CentOS" and "Ubuntu" 
+# This playbook do the following : *
+# - installs nnix on both "CentOS" and "Ubuntu"
+# - starts nginx  
 - name: set up webserver
 
   hosts: linux
@@ -15,14 +17,29 @@
     #     name:
     #       - nginx
     #     state: absent
-     
+
+    # for learning purposes (tasks not required )
+
     # - name: Gathering service facts
     #   service_facts:
 
     # - name: Get facts
     #   debug:
     #     msg: "{{ ansible_facts.services['nginx'].status }}"
-    
+
+    # # Checking nginx existence
+    # - name: Check if Service Exists
+    #   stat: path=/etc/init.d/{{service_name}}
+    #   register: service_status
+    #   tags: check nginx
+
+
+    # - name: Display service availability
+    #   debug:
+    #     msg: "Nginx service is {{ 'installed' if service_status.stat.exists  else 'not installed' }}"
+    #   #when: service_status.stat.exists
+    #   tags: check nginx
+
     # Install EPEL repository
     # - name: Install EPEL
     #   yum:
@@ -38,18 +55,7 @@
         state: latest
       tags: install nginx
 
-    # # Checking nginx existence
-    # - name: Check if Service Exists
-    #   stat: path=/etc/init.d/{{service_name}}
-    #   register: service_status
-    #   tags: check nginx
-
-
-    # - name: Display service availability
-    #   debug:
-    #     msg: "Nginx service is {{ 'installed' if service_status.stat.exists  else 'not installed' }}"
-    #   #when: service_status.stat.exists
-    #   tags: check nginx
+    
 
     # Nginx service management 
     - name: start nginx
@@ -73,6 +79,7 @@
         trim_blocks: true
         mode: 0644
       tags: render template
+      
     # # Checking nginx status 
 
     # - name: Check Nginx Service Status

@@ -8,6 +8,7 @@
       file:
         path: "{{nginx_root_location}}" 
         state: directory
+        
     - name : install unzip archive
       ansible.builtin.unarchive:
         src: ../files/playbook_stacker.zip
