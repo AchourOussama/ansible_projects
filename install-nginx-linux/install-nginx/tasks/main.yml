@@ -1,0 +1,28 @@
+---
+# This playbook do the following installs ngnix on both "CentOS" and "Ubuntu"  
+
+  # Install EPEL repository
+  # - name: Install EPEL
+  #   yum:
+  #     name: epel-release
+  #     update_cache: yes
+  #     state: latest
+  #   when: ansible_distribution == 'CentOS'
+  
+  # Install nginx  
+  - name: Install the latest version of nginx 
+    package:
+      name: nginx
+      state: latest
+    tags: install nginx
+
+  # Start nginx
+  - name: start nginx
+    service: 
+      name: nginx
+      state: started
+      #enabled: yes  # if you want to also enable nginx
+    tags: start nginx
+
+...
+

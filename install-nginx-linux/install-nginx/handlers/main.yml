@@ -1,0 +1,7 @@
+---
+  # Checking the web server after restart: 
+  - name : Check HTTP service 
+    uri:
+      url: "http://{{ansible_default_ipv4.address}}"
+      status_code:
+        - 200

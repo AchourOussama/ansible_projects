@@ -1,0 +1,65 @@
+---
+# This playbook do the following manage nginx different life cycle stages (start , restart , remove ,etc)
+
+  # Start nginx  
+  - name: start nginx
+    service: 
+      name: nginx
+      state: started
+      #enabled: yes  # if you want to also enable nginx
+    tags: start nginx
+
+  # Remove nginx 
+  - name: Remove installed nginx 
+    package:
+      name:
+        - nginx
+      state: absent
+    tags: remove nginx
+
+  # Checking nginx existence
+  - name: Check if Service Exists
+    stat: path=/etc/init.d/{{service_name}}
+    register: service_status
+    tags: check nginx
+
+
+  # Restart nginx
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
+    tags: restart ngnix
+    notify: Check HTTP service
+
+  # Checking nginx status 
+  - name: Check Nginx Service Status
+    systemd:
+      name: nginx
+      state: started
+    register: nginx_status
+    tags: check nginx
+  
+  - name: Display Nginx Service Status
+    debug:
+      msg: "Nginx service is {{ nginx_status.state | to_json }}"
+    tags: check nginx_status
+  
+  # Checking nginx status (other method)
+
+  # - name: Gathering service facts
+  #   service_facts:
+
+  # - name: Get facts
+  #   debug:
+  #     msg: "{{ ansible_facts.services['nginx'].status }}"
+
+
+  # - name: Display service availability
+  #   debug:
+  #     msg: "Nginx service is {{ 'installed' if service_status.stat.exists  else 'not installed' }}"
+  #   #when: service_status.stat.exists
+  #   tags: check nginx    
+
+...
+
