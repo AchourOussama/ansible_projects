@@ -1,0 +1,22 @@
+---
+# tasks file for deploy-application
+  - name: Ensure Nginx root directory  directory exists
+    file:
+      path: "{{nginx_root_location}}" 
+      state: directory
+        
+  - name : Install unzip archive
+    ansible.builtin.unarchive:
+      src: ../files/playbook_stacker.zip
+      dest: "{{nginx_root_location}}"
+      mode: "755"
+
+  - name: Render index.html-easter_egg.j2 template to index.html on target
+    template:
+      src: ../templates/index.html-easter_egg.j2
+      dest: "{{nginx_root_location}}/index.html"
+      trim_blocks: true
+      mode: 0644
+    tags: render template
+
+...
