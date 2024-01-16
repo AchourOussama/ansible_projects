@@ -11,7 +11,7 @@
   # Roles: list of roles to be imported into the play 
   roles:
     - install-nginx
-    # - webapp
+    - deploy-application
 
 # Three dots indicate the end of a YAML document
 ...
